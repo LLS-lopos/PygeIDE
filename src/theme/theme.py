@@ -28,8 +28,14 @@ class Theme(QMenu):
             self.addSeparator()
 
         # On récupère le theme de démarrage
-        app = QApplication.instance()
-        currentTheme = app.style().name()
+        try:
+            with open(self.conf_json, 'r') as f:
+                data = json.load(f)
+                if data:
+                    currentTheme = data
+        except:
+            app = QApplication.instance()
+            currentTheme = app.style().name()
 
         # Charger le thème au démarrage
         self.charger_theme(currentTheme)
