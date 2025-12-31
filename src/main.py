@@ -5,10 +5,11 @@ from PySide6.QtGui import QGuiApplication, QAction, QIcon
 from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QVBoxLayout, QGridLayout, QSizePolicy, \
     QLabel
 
+from APP.IDE_principal import IDE
 from theme.theme import Theme
 
 
-class IDE(QMainWindow):
+class Main(QMainWindow):
     def __init__(self, parent=None, largeur=800, hauteur=600):
         super().__init__(parent)
         moniteur = QGuiApplication.primaryScreen()
@@ -59,7 +60,7 @@ class IDE(QMainWindow):
         Menu_fichier = self.barreMenu.addMenu("&Fichier")
 
         # Ajouter le menu de thème réutilisable
-        menu_theme = Theme()
+        menu_theme = Theme(chemin="./theme")
         self.barreMenu.addMenu(menu_theme)
 
         # Créer l'action de quitter
@@ -115,7 +116,10 @@ class IDE(QMainWindow):
 
     @Slot()
     def editer_projet(self):
+        self.run = IDE()
+        self.run.show()
         print("éditer projet")
+        self.destroy()
 
     @Slot()
     def lancer_projet(self):
@@ -137,6 +141,6 @@ class IDE(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication([])
-    win = IDE()
+    win = Main()
     win.show()
     sys.exit(app.exec())

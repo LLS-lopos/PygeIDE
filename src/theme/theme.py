@@ -11,13 +11,14 @@ from PySide6.QtWidgets import QMenu, QStyleFactory, QApplication
 
 
 class Theme(QMenu):
-    def __init__(self, text="&Themes", parent=None):
+    def __init__(self, text="&Themes", parent=None, chemin=""):
         super().__init__(text, parent)
+        self.chemin = chemin
         racine = pathlib.Path(__file__).parent
         self.conf_json = racine / "theme.json"
 
         # On liste les fichiers d'extension .qss présents dans le dossier qss.
-        styleSheets = [file for file in os.listdir("./theme") if file.endswith(".qss")]
+        styleSheets = [file for file in os.listdir(str(self.chemin)) if file.endswith(".qss")]
         # On trie la liste sans tenir compte de la casse.
         styleSheets.sort(key=lambda file: file.lower())
         # Pour chaque fichier trouvé, on crée l'action associée.
@@ -70,7 +71,7 @@ class Theme(QMenu):
     def createThemeAction(self, themeName):
         action = QAction(f"{themeName} theme", self)
         action.setStatusTip(f"{themeName} theme")
-        action.setData(f"./theme/{themeName}.qss")
+        action.setData(f"{self.chemin}/{themeName}.qss")
         action.triggered.connect(self.changeStyleSheet)
         action.setCheckable(True)
         return action
