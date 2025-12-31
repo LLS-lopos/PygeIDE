@@ -2,18 +2,19 @@ import sys
 
 from PySide6.QtCore import Slot
 from PySide6.QtGui import QGuiApplication, QAction, QIcon
-from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QCheckBox, QWidgetAction
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QVBoxLayout, QGridLayout, QSizePolicy, \
+    QLabel
+
 from theme.theme import Theme
+
 
 class IDE(QMainWindow):
     def __init__(self, parent=None, largeur=800, hauteur=600):
         super().__init__(parent)
         moniteur = QGuiApplication.primaryScreen()
         taille_moniteur = moniteur.size()
-        calcul_l = (taille_moniteur.width()//2) - (largeur//2)
-        calcul_h = (taille_moniteur.height()//2) - (hauteur//2)
         self.setWindowTitle("PyGame IDE")
-        self.setGeometry(int(calcul_l), int(calcul_h), largeur, hauteur)
+        self.setGeometry(int((taille_moniteur.width() // 2) - (largeur // 2)), int((taille_moniteur.height() // 2) - (hauteur // 2)), largeur, hauteur)
 
         self.centre()
 
@@ -24,6 +25,26 @@ class IDE(QMainWindow):
 
         # Configurer les différents éléments de l'interface
         self.barre_menu()
+
+        # Créer une disposition en grille pour les widgets
+        grille = QGridLayout(zone_centre)
+        # Configurer l'espacement et les marges de la grille
+        grille.setSpacing(2)  # Espacement entre les cellules
+        grille.setContentsMargins(2, 2, 2, 2)  # Marges autour de la grille
+
+        b_creer = QPushButton("+ Créer")
+        b_creer.clicked.connect(lambda: self.creer_projet())
+        zone1 = self.projet()
+        zone1.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        zone2 = self.action_projet()
+        zone2.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        grille.addWidget(b_creer, 0, 0, 1, 2)
+        grille.addWidget(zone1, 1, 0, 1, 1)
+        grille.addWidget(zone2, 1, 1, 1, 1)
+
+        grille.setColumnStretch(0, 3)
+        grille.setColumnStretch(1, 1)
 
     def barre_menu(self):
         """
@@ -54,15 +75,65 @@ class IDE(QMainWindow):
         # Lier
         self.setMenuBar(self.barreMenu)  # instancier la barre de menu
 
+    def projet(self):
+        widget = QWidget()
+        layout = QVBoxLayout()
+
+        # bouton/zone : îcone + nom de projet et chemin de fichier complet visible
+
+        layout.addWidget(QLabel("Projet"))
+
+        widget.setLayout(layout)
+        return widget
+
+    def action_projet(self):
+        widget = QWidget()
+        layout = QVBoxLayout()
+
+        edition = QPushButton("édition")
+        executer = QPushButton("exécuter")
+        renommer = QPushButton("renommer")
+        supprimer = QPushButton("supprimer")
+
+        edition.clicked.connect(lambda: self.editer_projet())
+        executer.clicked.connect(lambda: self.lancer_projet())
+        renommer.clicked.connect(lambda: self.renommer_projet())
+        supprimer.clicked.connect(lambda: self.supprimer_projet())
+
+        layout.addWidget(QLabel("Option"))
+        layout.addWidget(edition)
+        layout.addWidget(executer)
+        layout.addWidget(renommer)
+        layout.addWidget(supprimer)
+
+        widget.setLayout(layout)
+        return widget
+
+    @Slot()
+    def creer_projet(self):
+        print("Création d'un nouveau Projet")
+
+    @Slot()
+    def editer_projet(self):
+        print("éditer projet")
+
+    @Slot()
+    def lancer_projet(self):
+        print("exécuter projet")
+
+    @Slot()
+    def renommer_projet(self):
+        print("renommer projet")
+
+    @Slot()
+    def supprimer_projet(self):
+        print("supprimer projet")
+
     @Slot()
     def fonc_Quitter(self):
-        """
-        Fermer l'application.
-
-        Détruit la fenêtre principale et quitte l'application.
-        """
         self.destroy()
         sys.exit()
+
 
 if __name__ == "__main__":
     app = QApplication([])
