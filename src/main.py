@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 
 from PySide6.QtCore import Slot
 from PySide6.QtGui import QGuiApplication, QAction, QIcon
@@ -60,7 +61,9 @@ class Main(QMainWindow):
         Menu_fichier = self.barreMenu.addMenu("&Fichier")
 
         # Ajouter le menu de thème réutilisable
-        menu_theme = Theme(chemin="./theme")
+        # Resolve the bundled theme directory relative to this script (works with Nuitka onefile)
+        theme_dir = Path(__file__).parent / "theme"
+        menu_theme = Theme(chemin=str(theme_dir))
         self.barreMenu.addMenu(menu_theme)
 
         # Créer l'action de quitter

@@ -44,7 +44,7 @@ class IDE(QMainWindow):
         Menu_fichier = self.barreMenu.addMenu("&Fichier")
 
         # Ajouter le menu de thème réutilisable
-        from src.theme.theme import Theme
+        from theme.theme import Theme
         menu_theme = Theme(chemin=str(pathlib.Path(__file__).parent.parent / "theme"))
         self.barreMenu.addMenu(menu_theme)
         # Créer l'action de fermer projet
@@ -67,7 +67,7 @@ class IDE(QMainWindow):
 
     @Slot()
     def fermer_projet(self):
-        from src.main import Main
+        from main import Main
         self.run = Main()
         self.run.show()
         print("Fermer Projet")
