@@ -23,10 +23,10 @@ build:
             python-version: '3.12'
             cache: 'pip'
             cache-dependency-path: |
-              **/dependence*.txt
+              **/dep*.txt
         - name: Installation des dépendances
           run: |
-            pip install -r dependence.txt
+            pip install -r dep.txt
 
         - name: Compilation avec Nuitka3
           uses: Nuitka/Nuitka-Action@main
