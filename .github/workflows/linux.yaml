@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
-      releases: write
+      id-token: write
 
     steps:
       - name: Utilisez repo
