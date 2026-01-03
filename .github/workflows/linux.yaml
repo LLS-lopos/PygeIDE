@@ -46,7 +46,7 @@ jobs:
           include-package: |
             APP
             theme
-          product-name: Pygame IDE
+          output-filename: Pygame IDE
 
       - name: Charger Artéfact
         uses: actions/upload-artifact@v4
