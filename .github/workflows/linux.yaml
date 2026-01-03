@@ -70,4 +70,3 @@ jobs:
           name: Linux x64 v${{ github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
