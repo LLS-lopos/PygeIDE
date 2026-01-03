@@ -58,7 +58,7 @@ jobs:
 
       - name: Zip le Build
         run: |
-          cd main.onefile-build
+          cd main.dist
           zip -r ../PygameIDE-linux-x64.zip .
 
       - name: Création du release
