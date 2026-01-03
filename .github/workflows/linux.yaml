@@ -59,16 +59,15 @@ jobs:
       - name: Zip le Build
         run: |
           ls ${{ github.workspace }}
-          ls 
-          ls build
-          zip -rZ bzip2 build/Pygame\ IDE . -i Pygame\ IDE 
+          zip -rZ bzip2 PygameIDE-linux-x64 . -i build/Pygame\ IDE 
+          ls ${{ github.workspace }}
 
       - name: Création du release
         uses: softprops/action-gh-release@v2
         with:
           files: PygameIDE-linux-x64.zip
           tag_name: ${{ github.ref_name }}
-          name: Linux x64 v$${{ github.ref_name }}
+          name: Linux x64 v${{ github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
