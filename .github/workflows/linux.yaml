@@ -46,7 +46,7 @@ jobs:
           include-package: |
             APP
             theme
-          output-filename: Pygame IDE
+          output-file: Pygame IDE
 
       - name: Charger Artéfact
         uses: actions/upload-artifact@v4
@@ -58,7 +58,6 @@ jobs:
 
       - name: Zip le Build
         run: |
-          mv main.bin "Pygame IDE"
           zip -rZ bzip2 Pygame\ IDE Pygame\ IDE 
 
       - name: Création du release
