@@ -46,6 +46,7 @@ jobs:
           include-package: |
             APP
             theme
+            engine
           output-file: Pygame IDE
 
       - name: Charger Artéfact
