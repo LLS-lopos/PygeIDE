@@ -97,13 +97,3 @@ jobs:
             - Version: ${{ steps.versioning.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Mise à jour du Dépôt
-        run: |
-          rm -rf build/
-          rm PygameIDE-linux-x64-${{ steps.versioning.outputs.version }}.zip
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add .
-          git commit -m "Bump version to ${{ steps.versioning.outputs.version }}"
-          git push
