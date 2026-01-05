@@ -1,6 +1,6 @@
 # Compilation mode, standalone everywhere, except on macOS there app bundle
 # nuitka-project: --mode=app
-
+#
 # Debugging options, controlled via environment variable at compile time.
 # nuitka-project-if: {OS} == "Windows" and os.getenv("DEBUG_COMPILATION", "no") == "yes":
 #    nuitka-project: --windows-console-mode=hide
@@ -9,17 +9,28 @@
 #        nuitka-project: --windows-console-mode=disable
 #    nuitka-project-else:
 #        pass
-
+import json
+import os
+import pathlib
 import sys
 from pathlib import Path
+from subprocess import Popen
+
+# Ajouter le répertoire src au chemin Python
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from PySide6.QtCore import Slot
-from PySide6.QtGui import QGuiApplication, QAction, QIcon
-from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QVBoxLayout, QGridLayout, QSizePolicy, \
+from PySide6.QtGui import QGuiApplication, QAction, QIcon, QPixmap
+from PySide6.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QWidget, QPushButton, QVBoxLayout, QGridLayout, QSizePolicy, \
     QLabel
 
 from APP.IDE_principal import IDE
+from APP.SYDE_creer_projet import CreerProjet
+from Fonction.structure import base_init, fichier_liste_prog, dos_conf
 from theme.theme import Theme
+
+racine = pathlib.Path().home()
+dos_conf = racine / ".PygeIDE"
 
 
 class Main(QMainWindow):
@@ -28,8 +39,9 @@ class Main(QMainWindow):
         moniteur = QGuiApplication.primaryScreen()
         taille_moniteur = moniteur.size()
         self.setWindowTitle("PyGame IDE")
-        self.setGeometry(int((taille_moniteur.width() // 2) - (largeur // 2)), int((taille_moniteur.height() // 2) - (hauteur // 2)), largeur, hauteur)
-
+        self.setGeometry(int((taille_moniteur.width() // 2) - (largeur // 2)),
+                         int((taille_moniteur.height() // 2) - (hauteur // 2)), largeur, hauteur)
+        base_init()
         self.centre()
 
     def centre(self):
@@ -99,6 +111,28 @@ class Main(QMainWindow):
 
         layout.addWidget(QLabel("Projet"))
 
+        data = None
+        if (dos_conf / fichier_liste_prog).exists():
+            with open((dos_conf / fichier_liste_prog), 'r') as f:
+                data = json.load(f)
+        if data:
+            for i in data:
+                bloc = QWidget()
+                vbox = QHBoxLayout()
+                if i["icon"]:
+                    img = QLabel()
+                    pixmap = QPixmap(i.get("icon"))
+                    img.setPixmap(pixmap)
+                    vbox.addWidget(img)
+                if i["chemin"]:
+                    vbox.addWidget(QLabel(i.get("chemin")))
+                if i["nom"]:
+                    titre = QLabel(i.get("nom"))
+                    titre.setStyleSheet("font-size: 20px;")
+                    vbox.addWidget(titre)
+                bloc.setLayout(vbox)
+                layout.addWidget(bloc)
+
         widget.setLayout(layout)
         return widget
 
@@ -112,7 +146,7 @@ class Main(QMainWindow):
         supprimer = QPushButton("supprimer")
 
         edition.clicked.connect(lambda: self.editer_projet())
-        executer.clicked.connect(lambda: self.lancer_projet())
+        executer.clicked.connect(self.lancer_projet)
         renommer.clicked.connect(lambda: self.renommer_projet())
         supprimer.clicked.connect(lambda: self.supprimer_projet())
 
@@ -128,6 +162,8 @@ class Main(QMainWindow):
     @Slot()
     def creer_projet(self):
         print("Création d'un nouveau Projet")
+        self.prog = CreerProjet()
+        self.prog.show()
 
     @Slot()
     def editer_projet(self):
@@ -139,6 +175,9 @@ class Main(QMainWindow):
     @Slot()
     def lancer_projet(self):
         print("exécuter projet")
+        print(pathlib.Path(__file__))
+        dos = pathlib.Path(__file__).parent
+        Popen(["python3", pathlib.Path(dos / "engine/start.py")])
 
     @Slot()
     def renommer_projet(self):
