@@ -7,6 +7,9 @@ class RunPyGame:
         self.running = True
         self.ecran = (pygame.display.set_mode(taille))
         pygame.display.set_caption(nom)
+        info = pygame.display.Info()
+        drivers = pygame.display.get_driver()
+        print(info, drivers)
 
         self.n_fps = pygame.time.Clock()
         self.fps = fps
