@@ -27,7 +27,7 @@ jobs:
         with:
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
-          user_format_type: "${major}.${minor}.${patch}"
+          version_format: "${major}.${minor}.${patch}"
           bump_each_commit: true
 
       - name: Projet Python
